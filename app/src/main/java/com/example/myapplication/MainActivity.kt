@@ -51,12 +51,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.counter.CounterScreen
 //import com.example.myapplication.ui.theme.MyApplicationTheme
 
 sealed class BottomTab(val route: String, val title: String, val icon: ImageVector) {
     object Greeting : BottomTab("greeting", "Greeting", Icons.Filled.Person)
     object Counter : BottomTab("counter", "Counter", Icons.Filled.AddCircle)
-    object Movie : BottomTab("movie", "Movie", Icons.Filled.Movie)
+    object TVShow : BottomTab("tvshow", "TV Show", Icons.Filled.Movie)
 }
 
 class MainActivity : ComponentActivity() {
@@ -103,7 +104,7 @@ fun MainScreen() {
     val tabs = listOf(
         BottomTab.Greeting,
         BottomTab.Counter,
-        BottomTab.Movie
+        BottomTab.TVShow
     )
 
     Scaffold(
@@ -139,13 +140,13 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(BottomTab.Greeting.route) {
-                GreetingTabScreen()
+                GreetingScreen()
             }
             composable(BottomTab.Counter.route) {
-                CounterTabScreen()
+                CounterScreen()
             }
-            composable(BottomTab.Movie.route) {
-                MovieScreen()
+            composable(BottomTab.TVShow.route) {
+                TVShowScreen()
             }
         }
     }
@@ -153,7 +154,7 @@ fun MainScreen() {
 
 // Greeting Tab
 @Composable
-fun GreetingTabScreen() {
+fun GreetingScreen() {
     var name by rememberSaveable { mutableStateOf("Android") }
 
     Column(
@@ -254,106 +255,6 @@ fun ProfileCard(name: String) {
 @Composable
 fun ProfileCardPreview() {
     ProfileCard(name = "name")
-}
-
-// Counter Tab
-class CounterViewModel : ViewModel() {
-    var count by mutableIntStateOf(0)
-        private set
-
-    fun increment() {
-        count++
-    }
-
-    fun reset() {
-        count = 0
-    }
-}
-
-@Composable
-fun CounterTabScreen(viewModel: CounterViewModel = viewModel()) {
-    CounterView(
-        count = viewModel.count,
-        onIncrement = viewModel::increment,
-        onReset = viewModel::reset
-    )
-}
-
-@Composable
-fun CounterView(count: Int, onIncrement: () -> Unit, onReset: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Tap Counter",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "$count",
-                    fontSize = 64.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = if (count == 1 || count == 0) "tap recorded" else "taps recorded",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Button(
-                onClick = onIncrement,
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.AddCircle, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Tap me")
-            }
-
-            Button(
-                onClick = onReset,
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Refresh, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Reset")
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CounterViewPreview() {
-//    MyApplicationTheme {
-        CounterView(count = 3, onIncrement = {}, onReset = {})
-//    }
 }
 
 @Preview(showBackground = true)

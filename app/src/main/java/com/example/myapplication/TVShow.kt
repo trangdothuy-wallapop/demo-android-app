@@ -17,13 +17,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -59,7 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 //import com.example.myapplication.ui.theme.MyApplicationTheme
 
-data class Movie(
+data class TVShow(
     val id: Int,
     val title: String,
     val genre: String,
@@ -70,8 +68,8 @@ data class Movie(
     val posterEmoji: String = "🎬"
 )
 
-val sampleMovies = listOf(
-    Movie(
+val sampleTVShows = listOf(
+    TVShow(
         id = 1,
         title = "Inception",
         genre = "Sci-Fi",
@@ -81,7 +79,7 @@ val sampleMovies = listOf(
         overview = "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
         posterEmoji = "🌀"
     ),
-    Movie(
+    TVShow(
         id = 2,
         title = "Interstellar",
         genre = "Sci-Fi",
@@ -91,7 +89,7 @@ val sampleMovies = listOf(
         overview = "When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot is tasked to pilot a spacecraft along with a team of researchers.",
         posterEmoji = "🚀"
     ),
-    Movie(
+    TVShow(
         id = 3,
         title = "The Dark Knight",
         genre = "Action",
@@ -101,7 +99,7 @@ val sampleMovies = listOf(
         overview = "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest tests.",
         posterEmoji = "🦇"
     ),
-    Movie(
+    TVShow(
         id = 4,
         title = "Dune: Part Two",
         genre = "Sci-Fi",
@@ -111,7 +109,7 @@ val sampleMovies = listOf(
         overview = "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",
         posterEmoji = "🏜️"
     ),
-    Movie(
+    TVShow(
         id = 5,
         title = "Spirited Away",
         genre = "Animation",
@@ -121,7 +119,7 @@ val sampleMovies = listOf(
         overview = "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.",
         posterEmoji = "🐉"
     ),
-    Movie(
+    TVShow(
         id = 6,
         title = "Pulp Fiction",
         genre = "Drama",
@@ -133,20 +131,20 @@ val sampleMovies = listOf(
     )
 )
 
-val movieCategories = listOf("All", "Sci-Fi", "Action", "Animation", "Drama")
+val tvShowCategories = listOf("All", "Sci-Fi", "Action", "Animation", "Drama")
 
 @Composable
-fun MovieScreen(modifier: Modifier = Modifier) {
+fun TVShowScreen(modifier: Modifier = Modifier) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var selectedCategory by rememberSaveable { mutableStateOf("All") }
     val favoriteIds = remember { mutableStateListOf<Int>() }
 
-    val featuredMovie = sampleMovies.first()
+    val featuredTVShow = sampleTVShows.first()
 
-    val filteredMovies = remember(searchQuery, selectedCategory) {
-        sampleMovies.filter { movie ->
-            val matchesCategory = selectedCategory == "All" || movie.genre.equals(selectedCategory, ignoreCase = true)
-            val matchesQuery = searchQuery.isBlank() || movie.title.contains(searchQuery, ignoreCase = true) || movie.overview.contains(searchQuery, ignoreCase = true)
+    val filteredTVShows = remember(searchQuery, selectedCategory) {
+        sampleTVShows.filter { tvShow ->
+            val matchesCategory = selectedCategory == "All" || tvShow.genre.equals(selectedCategory, ignoreCase = true)
+            val matchesQuery = searchQuery.isBlank() || tvShow.title.contains(searchQuery, ignoreCase = true) || tvShow.overview.contains(searchQuery, ignoreCase = true)
             matchesCategory && matchesQuery
         }
     }
@@ -161,7 +159,7 @@ fun MovieScreen(modifier: Modifier = Modifier) {
         // Title & Search
         item {
             Text(
-                text = "Movies",
+                text = "TV Shows",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -172,7 +170,7 @@ fun MovieScreen(modifier: Modifier = Modifier) {
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search movies, genres...") },
+                placeholder = { Text("Search names, genres...") },
                 leadingIcon = {
                     Icon(Icons.Filled.Search, contentDescription = "Search")
                 },
@@ -193,7 +191,7 @@ fun MovieScreen(modifier: Modifier = Modifier) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(movieCategories) { category ->
+                items(tvShowCategories) { category ->
                     FilterChip(
                         selected = selectedCategory == category,
                         onClick = { selectedCategory = category },
@@ -210,14 +208,14 @@ fun MovieScreen(modifier: Modifier = Modifier) {
         // Featured Movie Banner (only when not searching)
         if (searchQuery.isBlank() && selectedCategory == "All") {
             item {
-                FeaturedMovieCard(
-                    movie = featuredMovie,
-                    isFavorite = favoriteIds.contains(featuredMovie.id),
+                FeaturedTVShowCard(
+                    tvShow = featuredTVShow,
+                    isFavorite = favoriteIds.contains(featuredTVShow.id),
                     onToggleFavorite = {
-                        if (favoriteIds.contains(featuredMovie.id)) {
-                            favoriteIds.remove(featuredMovie.id)
+                        if (favoriteIds.contains(featuredTVShow.id)) {
+                            favoriteIds.remove(featuredTVShow.id)
                         } else {
-                            favoriteIds.add(featuredMovie.id)
+                            favoriteIds.add(featuredTVShow.id)
                         }
                     }
                 )
@@ -232,15 +230,15 @@ fun MovieScreen(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (searchQuery.isBlank() && selectedCategory == "All") "Popular Movies" else "Results (${filteredMovies.size})",
+                    text = if (searchQuery.isBlank() && selectedCategory == "All") "Popular TV Shows" else "Results (${filteredTVShows.size})",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
             }
         }
 
-        // Movie Items List
-        if (filteredMovies.isEmpty()) {
+        // TV Show Items List
+        if (filteredTVShows.isEmpty()) {
             item {
                 Box(
                     modifier = Modifier
@@ -256,15 +254,15 @@ fun MovieScreen(modifier: Modifier = Modifier) {
                 }
             }
         } else {
-            items(filteredMovies, key = { it.id }) { movie ->
-                MovieCard(
-                    movie = movie,
-                    isFavorite = favoriteIds.contains(movie.id),
+            items(filteredTVShows, key = { it.id }) { tvShow ->
+                TVShowCard(
+                    tvShow = tvShow,
+                    isFavorite = favoriteIds.contains(tvShow.id),
                     onToggleFavorite = {
-                        if (favoriteIds.contains(movie.id)) {
-                            favoriteIds.remove(movie.id)
+                        if (favoriteIds.contains(tvShow.id)) {
+                            favoriteIds.remove(tvShow.id)
                         } else {
-                            favoriteIds.add(movie.id)
+                            favoriteIds.add(tvShow.id)
                         }
                     }
                 )
@@ -274,8 +272,8 @@ fun MovieScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FeaturedMovieCard(
-    movie: Movie,
+fun FeaturedTVShowCard(
+    tvShow: TVShow,
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier
@@ -334,7 +332,7 @@ fun FeaturedMovieCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = movie.posterEmoji,
+                        text = tvShow.posterEmoji,
                         fontSize = 44.sp,
                         modifier = Modifier
                             .size(60.dp)
@@ -345,7 +343,7 @@ fun FeaturedMovieCard(
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
                         Text(
-                            text = movie.title,
+                            text = tvShow.title,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -354,7 +352,7 @@ fun FeaturedMovieCard(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "${movie.year} • ${movie.duration} • ${movie.genre}",
+                                text = "${tvShow.year} • ${tvShow.duration} • ${tvShow.genre}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -371,7 +369,7 @@ fun FeaturedMovieCard(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "${movie.rating}",
+                                text = "${tvShow.rating}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -382,7 +380,7 @@ fun FeaturedMovieCard(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = movie.overview,
+                    text = tvShow.overview,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
@@ -408,8 +406,8 @@ fun FeaturedMovieCard(
 }
 
 @Composable
-fun MovieCard(
-    movie: Movie,
+fun TVShowCard(
+    tvShow: TVShow,
     isFavorite: Boolean,
     onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier
@@ -417,7 +415,7 @@ fun MovieCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { /* Handle movie click */ },
+            .clickable { /* Handle TV show click */ },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -439,7 +437,7 @@ fun MovieCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = movie.posterEmoji,
+                    text = tvShow.posterEmoji,
                     fontSize = 32.sp
                 )
             }
@@ -450,7 +448,7 @@ fun MovieCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = movie.title,
+                    text = tvShow.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
@@ -468,7 +466,7 @@ fun MovieCard(
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         Text(
-                            text = movie.genre,
+                            text = tvShow.genre,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -476,7 +474,7 @@ fun MovieCard(
                     }
 
                     Text(
-                        text = "${movie.year} • ${movie.duration}",
+                        text = "${tvShow.year} • ${tvShow.duration}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -495,7 +493,7 @@ fun MovieCard(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "${movie.rating}",
+                        text = "${tvShow.rating}",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -515,8 +513,8 @@ fun MovieCard(
 
 @Preview(showBackground = true)
 @Composable
-fun MovieScreenPreview() {
+fun TVShowScreenPreview() {
 //    MyApplicationTheme {
-        MovieScreen()
+        TVShowScreen()
 //    }
 }
