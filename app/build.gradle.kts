@@ -66,6 +66,8 @@ dependencies {
 
     // Coil for Compose image loading
     implementation("io.coil-kt:coil-compose:2.7.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation(libs.junit)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
