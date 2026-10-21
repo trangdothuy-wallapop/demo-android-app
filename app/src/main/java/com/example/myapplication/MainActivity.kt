@@ -52,6 +52,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.counter.CounterScreen
+import com.example.myapplication.greeting.GreetingScreen
 //import com.example.myapplication.ui.theme.MyApplicationTheme
 
 sealed class BottomTab(val route: String, val title: String, val icon: ImageVector) {
@@ -152,110 +153,6 @@ fun MainScreen() {
     }
 }
 
-// Greeting Tab
-@Composable
-fun GreetingScreen() {
-    var name by rememberSaveable { mutableStateOf("Android") }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "👋",
-                    fontSize = 48.sp
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Greeting(
-                    name = if (name.isBlank()) "Friend" else name
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Enter your name") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ProfileCard(name = name)
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        style = MaterialTheme.typography.headlineSmall,
-        fontWeight = FontWeight.Bold,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-//    MyApplicationTheme {
-        Greeting("Android")
-//    }
-}
-
-@Composable
-fun ProfileCard(name: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(text = "👩‍💻", fontSize = 32.sp)
-            Spacer(modifier = Modifier.width(12.dp))
-            Column {
-                Text(
-                    text = "$name",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = "Online 3 min ago",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileCardPreview() {
-    ProfileCard(name = "name")
-}
 
 @Preview(showBackground = true)
 @Composable
