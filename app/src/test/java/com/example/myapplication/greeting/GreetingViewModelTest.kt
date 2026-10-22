@@ -5,12 +5,7 @@ import org.junit.Before
 import org.junit.Test
 
 class GreetingViewModelTest {
-    private lateinit var viewModel: GreetingViewModel
-
-    @Before
-    fun setUp() {
-        viewModel = GreetingViewModel()
-    }
+    private val viewModel: GreetingViewModel = GreetingViewModel()
 
     @Test
     fun initialName_isAndroid() {

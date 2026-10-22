@@ -2,8 +2,7 @@ package com.example.myapplication.tvshow.ui
 
 import com.example.myapplication.tvshow.domain.TvShowError
 import com.example.myapplication.tvshow.domain.TvShowModel
-import com.example.myapplication.tvshow.domain.TvShowRepository
-import com.example.myapplication.tvshow.domain.TvShowUseCase
+import com.example.myapplication.tvshow.domain.TvShowResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -18,23 +17,27 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-// Fake repository to control the data returned to the ViewModel
-class FakeTvShowRepository(
-    var resultToReturn: Result<List<TvShowModel>> = Result.success(emptyList())
-) : TvShowRepository {
-    override suspend fun getShows(): Result<List<TvShowModel>> = resultToReturn
+// Fake use case to control the data returned to the ViewModel
+class FakeTvShowUseCase(
+    var resultToReturn: Result<TvShowResult> = Result.success(
+        TvShowResult(shows = emptyList(), genres = listOf("All"))
+    )
+) {
+    suspend fun getShows(): Result<TvShowResult> = resultToReturn
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TvShowViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var fakeRepository: FakeTvShowRepository
+    private lateinit var fakeUseCase: FakeTvShowUseCase
+    private lateinit var viewModel: TvShowViewModel
 
     @Before
     fun setUp() {
         // Redirect Dispatchers.Main to our test dispatcher before each test
         Dispatchers.setMain(testDispatcher)
-        fakeRepository = FakeTvShowRepository()
+        fakeUseCase = FakeTvShowUseCase()
+        viewModel = TvShowViewModel(fakeUseCase::getShows)
     }
 
     @After
@@ -68,9 +71,9 @@ class TvShowViewModelTest {
             createSampleShow(1, "Show 1"),
             createSampleShow(2, "Show 2")
         )
-        fakeRepository.resultToReturn = Result.success(sampleShows)
-        val useCase = TvShowUseCase(fakeRepository)
-        val viewModel = TvShowViewModel(useCase)
+        fakeUseCase.resultToReturn = Result.success(TvShowResult(shows = sampleShows, genres = listOf("All", "Comedy")))
+
+        viewModel.loadShows() // Trigger the loading of shows
 
         advanceUntilIdle() // Wait for all coroutines to finish
 
@@ -80,14 +83,14 @@ class TvShowViewModelTest {
         assertTrue(state.errorMessage == null)
         assertEquals(2, state.shows.size)
         assertEquals(sampleShows, state.shows)
+        assertEquals(listOf("All", "Comedy"), state.genres)
     }
 
     @Test
     fun loadShows_failureFetch_updatesStateWithError() = runTest {
         // Prepare a failure result
-        fakeRepository.resultToReturn = Result.failure(TvShowError.NoInternetError)
-        val useCase = TvShowUseCase(fakeRepository)
-        val viewModel = TvShowViewModel(useCase)
+        fakeUseCase.resultToReturn = Result.failure(TvShowError.NoInternetError)
+        viewModel.loadShows()
 
         advanceUntilIdle()
 
@@ -99,27 +102,16 @@ class TvShowViewModelTest {
     }
 
     @Test
-    fun selectGenre_updatesSelectedGenreInState() = runTest {
-        val useCase = TvShowUseCase(fakeRepository)
-        val viewModel = TvShowViewModel(useCase)
-
-        advanceUntilIdle()
-
+    fun selectGenre_updatesSelectedGenreInState() {
         // Select a genre
         viewModel.selectGenre("Comedy")
 
         // Check that the selected genre is updated in the state
-        val state = viewModel.uiState.value
-        assertEquals("Comedy", state.selectedGenre)
+        assertEquals("Comedy", viewModel.uiState.value.selectedGenre)
     }
 
     @Test
-    fun toggleLike_updatesLikedShowsInState() = runTest {
-        val useCase = TvShowUseCase(fakeRepository)
-        val viewModel = TvShowViewModel(useCase)
-
-        advanceUntilIdle()
-
+    fun toggleLike_updatesLikedShowsInState() {
         // Toggle like for a show
         viewModel.toggleLike(1)
         // Check that the liked show is updated in the state

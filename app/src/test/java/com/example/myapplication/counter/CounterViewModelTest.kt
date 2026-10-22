@@ -5,12 +5,7 @@ import org.junit.Before
 import org.junit.Test
 
 class CounterViewModelTest {
-    private lateinit var viewModel: CounterViewModel
-
-    @Before
-    fun setUp() {
-        viewModel = CounterViewModel()
-    }
+    private val viewModel = CounterViewModel()
 
     @Test
     fun initialCount_isZero() {

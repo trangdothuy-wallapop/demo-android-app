@@ -41,7 +41,7 @@ class TvShowUseCase(
                     show.summary.isNotBlank() &&
                     !show.imageUrl.isNullOrBlank()
                 }
-                .take(20) // Rule 4: Limits to the first 20 items
+                .take(20) // Rule 4: Limits to < first 20 items
 
             // Rule 5: Checks if filtered result is empty -> NoValidShowsError
             if (validShows.isEmpty()) {

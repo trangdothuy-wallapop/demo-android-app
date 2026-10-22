@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.tvshow.data.TvShowRepositoryImplementation
 import com.example.myapplication.tvshow.domain.TvShowUseCase
+import com.example.myapplication.tvshow.domain.TvShowResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
 class TvShowViewModel(
-    private val useCase: TvShowUseCase = TvShowUseCase(TvShowRepositoryImplementation())
+    private val useCase: suspend () -> Result<TvShowResult> = {
+        TvShowUseCase(TvShowRepositoryImplementation())() }
 ) : ViewModel() {
 
     // Editable, but only inside this ViewModel

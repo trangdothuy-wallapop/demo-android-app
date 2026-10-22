@@ -303,7 +303,7 @@ fun TvShowUiStatePreview() {
             rating = 6.5,
             imageUrl = null,
             summary = "An invisible force field descends upon a small town, trapping everyone inside.",
-            isLiked = false
+            isLiked = true
         )
     )
 
