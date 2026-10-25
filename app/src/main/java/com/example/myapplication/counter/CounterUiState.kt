@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CounterUiState(count: Int, onIncrement: () -> Unit, onReset: () -> Unit) {
+fun CounterUiState(dataClass: CounterDataClass, onIncrement: () -> Unit, onReset: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,14 +55,14 @@ fun CounterUiState(count: Int, onIncrement: () -> Unit, onReset: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = "$count",
+                    text = "${dataClass.count}",
                     fontSize = 64.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (count == 1 || count == 0) "tap recorded" else "taps recorded",
+                    text = if (dataClass.count == 1 || dataClass.count == 0) "tap recorded" else "taps recorded",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -99,6 +99,6 @@ fun CounterUiState(count: Int, onIncrement: () -> Unit, onReset: () -> Unit) {
 @Composable
 fun CounterViewPreview() {
 //    MyApplicationTheme {
-    CounterUiState(count = 3, onIncrement = {}, onReset = {})
+    CounterUiState(dataClass = CounterDataClass(count = 3), onIncrement = {}, onReset = {})
 //    }
 }

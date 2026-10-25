@@ -6,7 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun CounterScreen(viewModel: CounterViewModel = viewModel()) {
     CounterUiState(
-        count = viewModel.count,
+        dataClass = viewModel.dataClass,
         onIncrement = viewModel::increment,
         onReset = viewModel::reset
     )

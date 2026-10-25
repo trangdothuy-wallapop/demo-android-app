@@ -1,19 +1,19 @@
 package com.example.myapplication.counter
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class CounterViewModel : ViewModel() {
-    var count by mutableIntStateOf(0)
+    var dataClass by mutableStateOf(CounterDataClass())
         private set
 
     fun increment() {
-        count++
+        dataClass = dataClass.copy(count = dataClass.count + 1)
     }
 
     fun reset() {
-        count = 0
+        dataClass = dataClass.copy(count = 0)
     }
 }
