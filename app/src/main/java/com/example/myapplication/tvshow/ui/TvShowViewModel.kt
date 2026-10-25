@@ -21,9 +21,9 @@ class TvShowViewModel(
 
     // Editable, but only inside this ViewModel
     // It starts with isLoading = true --> the screen shows a loading spinner right away
-    private val _uiState = MutableStateFlow(TvShowUiState(isLoading = true))
+    private val _uiState = MutableStateFlow(TvShowUiDataClass(isLoading = true))
     // Whenever _uiState changes, Compose automatically redraws the screen, but UI isn't allowed to modify uiState directly
-    val uiState: StateFlow<TvShowUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<TvShowUiDataClass> = _uiState.asStateFlow()
 
     init {
         loadShows()

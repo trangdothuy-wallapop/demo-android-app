@@ -47,28 +47,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.myapplication.tvshow.domain.TvShowModel
 
-// UI State data class holding all presentation data
-data class TvShowUiState(
-    val isLoading: Boolean = false,
-    val shows: List<TvShowModel> = emptyList(),
-    val genres: List<String> = listOf("All"),
-    val selectedGenre: String = "All",
-    val likedShowIds: Set<Int> = emptySet(),
-    val errorMessage: String? = null
-) {
-    // Derived property: returns the list filtered by selected genre
-    val displayedShows: List<TvShowModel>
-        get() = if (selectedGenre == "All") {
-            shows
-        } else {
-            shows.filter { it.genres.contains(selectedGenre) }
-        }
-}
-
 // Composable screen layout for TV Shows.
 @Composable
 fun TvShowUiState(
-    uiState: TvShowUiState,
+    uiState: TvShowUiDataClass,
     onSelectGenre: (String) -> Unit,
     onToggleLike: (Int) -> Unit,
     onRetry: () -> Unit,
@@ -308,7 +290,7 @@ fun TvShowUiStatePreview() {
     )
 
     TvShowUiState(
-        uiState = TvShowUiState(
+        uiState = TvShowUiDataClass(
             isLoading = false,
             shows = sampleShows,
             genres = listOf("All", "Drama", "Science-Fiction"),
