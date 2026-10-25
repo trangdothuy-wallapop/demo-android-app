@@ -10,7 +10,7 @@ class TvShowRepositoryImplementation(
 
     override suspend fun getShows(): Result<List<TvShowModel>> {
         return runCatching {
-            val dtos = apiService.fetchShows(page = 1)
+            val dtos = apiService.fetchShows()
             dtos.map { it.toDomain() }
         }
     }

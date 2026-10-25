@@ -9,12 +9,14 @@ import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+val tvmazeApi = "https://api.tvmaze.com/shows?page=1"
+
 class TvShowApiService(
     private val client: HttpClient = createKtorClient()
 ) {
-    // Fetches TV shows from https://api.tvmaze.com/shows?page=1
-    suspend fun fetchShows(page: Int = 1): List<TvShowDto> {
-        return client.get("https://api.tvmaze.com/shows?page=$page").body()
+    // Fetches TV shows from Tvmaze API, returns a list of TvShowDto
+    suspend fun fetchShows(): List<TvShowDto> {
+        return client.get(tvmazeApi).body()
     }
 
     companion object {
