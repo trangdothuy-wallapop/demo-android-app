@@ -2,7 +2,7 @@
 
 package com.example.myapplication.greeting
 
-class GreetingModel {
-    val name: String = "Android"
+data class GreetingDataClass(
+    val name: String = "Android",
     val displayName: String = "Android"
-}
+)

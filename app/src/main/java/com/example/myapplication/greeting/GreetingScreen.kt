@@ -6,8 +6,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun GreetingScreen(viewModel: GreetingViewModel = viewModel()) {
     GreetingUiState(
-        name = viewModel.name,
-        displayName = viewModel.displayName,
+        dataClass = viewModel.dataClass,
         onNameChange = viewModel::updateName
     )
 }

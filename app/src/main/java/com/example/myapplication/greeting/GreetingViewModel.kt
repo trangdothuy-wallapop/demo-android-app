@@ -8,13 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class GreetingViewModel : ViewModel() {
-    var name by mutableStateOf("Android")
+    var dataClass by mutableStateOf(GreetingDataClass())
         private set
 
-    val displayName: String
-        get() = if (name.isBlank()) "Friend" else name
-
     fun updateName(newName: String) {
-        name = newName
+        dataClass = dataClass.copy(
+            name = newName,
+            displayName = if (newName.isBlank()) "Friend" else newName)
     }
 }

@@ -26,8 +26,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun GreetingUiState(
-    name: String,
-    displayName: String,
+    dataClass: GreetingDataClass,
     onNameChange: (String) -> Unit
 ) {
     Column(
@@ -55,14 +54,14 @@ fun GreetingUiState(
                     fontSize = 48.sp
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                Greeting(displayName)
+                Greeting(dataClass.displayName)
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = name,
+            value = dataClass.name,
             onValueChange = onNameChange,
             label = { Text("Enter your name") },
             singleLine = true,
@@ -71,7 +70,7 @@ fun GreetingUiState(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ProfileCard(name = name)
+        ProfileCard(name = dataClass.name)
     }
 }
 
@@ -133,8 +132,10 @@ fun ProfileCardPreview() {
 fun GreetingUiStatePreview() {
 //    MyApplicationTheme {
     GreetingUiState(
-        name = "Android",
-        displayName = "Android",
+        dataClass = GreetingDataClass(
+            name = "Android",
+            displayName = "Android"
+        ),
         onNameChange = {}
     )
 //    }
