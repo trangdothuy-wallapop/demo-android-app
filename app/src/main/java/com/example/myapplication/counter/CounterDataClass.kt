@@ -1,5 +1,5 @@
 package com.example.myapplication.counter
 
-data class CounterDataClass(
+data class CounterModel(
     val count: Int = 0
 )

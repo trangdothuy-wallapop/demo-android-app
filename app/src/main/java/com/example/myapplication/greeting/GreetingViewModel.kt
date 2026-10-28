@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class GreetingViewModel : ViewModel() {
-    var dataClass by mutableStateOf(GreetingDataClass())
+    var dataClass by mutableStateOf(GreetingModel())
         private set
 
     fun updateName(newName: String) {

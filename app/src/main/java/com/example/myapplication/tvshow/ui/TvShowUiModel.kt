@@ -3,7 +3,7 @@ package com.example.myapplication.tvshow.ui
 import com.example.myapplication.tvshow.domain.TvShowModel
 
 // UI State data class holding all presentation data
-data class TvShowUiDataClass(
+data class TvShowUiModel(
     val isLoading: Boolean = false,
     val shows: List<TvShowModel> = emptyList(),
     val genres: List<String> = listOf("All"),

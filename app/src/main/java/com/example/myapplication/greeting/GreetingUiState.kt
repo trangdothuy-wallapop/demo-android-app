@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun GreetingUiState(
-    dataClass: GreetingDataClass,
+    dataClass: GreetingModel,
     onNameChange: (String) -> Unit
 ) {
     Column(
@@ -132,7 +132,7 @@ fun ProfileCardPreview() {
 fun GreetingUiStatePreview() {
 //    MyApplicationTheme {
     GreetingUiState(
-        dataClass = GreetingDataClass(
+        dataClass = GreetingModel(
             name = "Android",
             displayName = "Android"
         ),

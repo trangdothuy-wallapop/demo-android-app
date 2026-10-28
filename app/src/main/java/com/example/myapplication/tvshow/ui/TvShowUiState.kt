@@ -1,7 +1,6 @@
 package com.example.myapplication.tvshow.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,7 +49,7 @@ import com.example.myapplication.tvshow.domain.TvShowModel
 // Composable screen layout for TV Shows.
 @Composable
 fun TvShowUiState(
-    uiState: TvShowUiDataClass,
+    uiState: TvShowUiModel,
     onSelectGenre: (String) -> Unit,
     onToggleLike: (Int) -> Unit,
     onRetry: () -> Unit,
@@ -290,7 +289,7 @@ fun TvShowUiStatePreview() {
     )
 
     TvShowUiState(
-        uiState = TvShowUiDataClass(
+        uiState = TvShowUiModel(
             isLoading = false,
             shows = sampleShows,
             genres = listOf("All", "Drama", "Science-Fiction"),

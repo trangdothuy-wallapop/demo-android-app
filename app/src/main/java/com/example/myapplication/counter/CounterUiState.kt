@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CounterUiState(dataClass: CounterDataClass, onIncrement: () -> Unit, onReset: () -> Unit) {
+fun CounterUiState(dataClass: CounterModel, onIncrement: () -> Unit, onReset: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,6 +99,6 @@ fun CounterUiState(dataClass: CounterDataClass, onIncrement: () -> Unit, onReset
 @Composable
 fun CounterViewPreview() {
 //    MyApplicationTheme {
-    CounterUiState(dataClass = CounterDataClass(count = 3), onIncrement = {}, onReset = {})
+    CounterUiState(dataClass = CounterModel(count = 3), onIncrement = {}, onReset = {})
 //    }
 }

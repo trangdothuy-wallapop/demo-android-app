@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class CounterViewModel : ViewModel() {
-    var dataClass by mutableStateOf(CounterDataClass())
+    var dataClass by mutableStateOf(CounterModel())
         private set
 
     fun increment() {

@@ -7,6 +7,7 @@ import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 val tvmazeApi = "https://api.tvmaze.com/shows?page=1"
