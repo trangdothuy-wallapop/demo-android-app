@@ -13,7 +13,8 @@ import kotlinx.serialization.json.Json
 val tvmazeApi = "https://api.tvmaze.com/shows?page=1"
 
 class TvShowApiService(
-    private val client: HttpClient = createKtorClient()
+    private val client: HttpClient
+//    = createKtorClient()
 ) {
     // Fetches TV shows from Tvmaze API, returns a list of TvShowDto
     suspend fun fetchShows(): List<TvShowDto> {

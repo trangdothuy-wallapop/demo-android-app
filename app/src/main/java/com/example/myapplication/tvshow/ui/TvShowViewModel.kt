@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 
 class TvShowViewModel(
-    private val useCase: suspend () -> Result<TvShowResult> = {
-        TvShowUseCase(TvShowRepositoryImplementation())() }
+    private val useCase: suspend () -> Result<TvShowResult>
+//    = { TvShowUseCase(TvShowRepositoryImplementation())() }
 ) : ViewModel() {
 
     // Editable, but only inside this ViewModel

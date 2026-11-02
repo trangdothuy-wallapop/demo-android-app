@@ -8,11 +8,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TvShowScreen(
     modifier: Modifier = Modifier,
-    viewModel: TvShowViewModel = viewModel()
+    viewModel: TvShowViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
