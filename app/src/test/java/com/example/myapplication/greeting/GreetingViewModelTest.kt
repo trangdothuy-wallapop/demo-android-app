@@ -9,20 +9,18 @@ class GreetingViewModelTest {
 
     @Test
     fun initialName_isAndroid() {
-        assertEquals("Android", viewModel.name)
+        assertEquals(GreetingModel(name = "Android", displayName = "Android"), viewModel.dataClass)
     }
 
     @Test
     fun updateName_changesName() {
         viewModel.updateName("Jetpack Compose")
-        assertEquals("Jetpack Compose", viewModel.name)
-        assertEquals("Jetpack Compose", viewModel.displayName)
+        assertEquals(GreetingModel(name = "Jetpack Compose", displayName = "Jetpack Compose"), viewModel.dataClass)
     }
 
     @Test
     fun emptyOrBlankName_setsDisplayNameToFriend() {
         viewModel.updateName("")
-        assertEquals("", viewModel.name)
-        assertEquals("Friend", viewModel.displayName)
+        assertEquals(GreetingModel(name = "", displayName = "Friend"), viewModel.dataClass)
     }
 }

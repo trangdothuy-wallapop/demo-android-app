@@ -18,9 +18,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.FilterListOff
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.TvOff
+import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -69,27 +75,58 @@ fun TvShowUiState(
             }
 
             // 2. Error State
-            uiState.errorMessage != null -> {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Oops! Something went wrong",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = uiState.errorMessage,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = onRetry) {
-                        Text("Retry")
+            uiState.errorState != null -> {
+                /// Handle different error states
+                when (uiState.errorState) {
+                    is TvShowErrorState.NoInternet -> {
+                        ErrorStateView(
+                            icon = Icons.Filled.WifiOff,
+                            title = "No Internet Connection",
+                            message = "Please check your internet connection and try again.",
+                            buttonText = "Retry",
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    is TvShowErrorState.ServerDown -> {
+                        ErrorStateView(
+                            icon = Icons.Filled.CloudOff,
+                            title = "Server Down",
+                            message = "The server is currently unavailable. Please try again later.",
+                            buttonText = "Retry",
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    is TvShowErrorState.EmptyShows -> {
+                        ErrorStateView(
+                            icon = Icons.Filled.TvOff,
+                            title = "No TV Shows Found",
+                            message = "No TV shows were returned from the server.",
+                            buttonText = "Retry",
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    is TvShowErrorState.NoValidShows -> {
+                        ErrorStateView(
+                            icon = Icons.Filled.FilterListOff,
+                            title = "No Valid TV Shows",
+                            message = "None of the returned TV shows had valid ratings or complete information.",
+                            buttonText = "Retry",
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    is TvShowErrorState.Unknown -> {
+                        ErrorStateView(
+                            icon = Icons.Filled.ErrorOutline,
+                            title = "Unexpected Error",
+                            message = "An unexpected error occurred. Please try again.",
+                            buttonText = "Retry",
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
                 }
             }
@@ -270,6 +307,44 @@ fun TvShowCard(
     }
 }
 
+@Composable
+fun ErrorStateView(
+    icon: ImageVector,
+    title: String,
+    message: String,
+    buttonText: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onRetry) {
+            Text(buttonText)
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun TvShowUiStatePreview() {
@@ -301,3 +376,31 @@ fun TvShowUiStatePreview() {
         onRetry = {}
     )
 }
+
+@Preview(showBackground = true)
+@Composable
+fun TvShowUiStateLoadingPreview() {
+    TvShowUiState(
+        uiState = TvShowUiModel(
+            isLoading = true
+        ),
+        onSelectGenre = {},
+        onToggleLike = {},
+        onRetry = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TvShowUiStateErrorPreview() {
+    TvShowUiState(
+        uiState = TvShowUiModel(
+            isLoading = false,
+            errorState = TvShowErrorState.Unknown
+        ),
+        onSelectGenre = {},
+        onToggleLike = {},
+        onRetry = {}
+    )
+}
+

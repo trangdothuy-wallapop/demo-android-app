@@ -40,13 +40,13 @@ class TvShowScreenShotTest: ScreenshotTest {
 
     @Test
     fun tvShowScreen_loadState_matchesScreenshot() {
-        val uiState = TvShowUiState(
+        val uiState = TvShowUiModel(
             isLoading = false,
             shows = sampleShows,
             genres = listOf("All", "Drama", "Comedy"),
             selectedGenre = "All",
             likedShowIds = setOf(2),
-            errorMessage = null
+            errorState = null
         )
 
         composeTestRule.setContent {
@@ -63,11 +63,95 @@ class TvShowScreenShotTest: ScreenshotTest {
     }
 
     @Test
-    fun tvShowScreen_errorState_matchesScreenshot() {
-        val errorState = TvShowUiState(
+    fun tvShowScreen_noInternetErrorState_matchesScreenshot() {
+        val errorState = TvShowUiModel(
             isLoading = false,
             shows = emptyList(),
-            errorMessage = "Unable to connect to the server. Please check your internet connection."
+            errorState = TvShowErrorState.NoInternet
+        )
+
+        composeTestRule.setContent {
+            TvShowUiState(
+                uiState = errorState,
+                onSelectGenre = {},
+                onToggleLike = {},
+                onRetry = {}
+            )
+        }
+
+        // Capture and compare the screenshot
+        compareScreenshot(composeTestRule)
+    }
+
+    @Test
+    fun tvShowScreen_serverDownErrorState_matchesScreenshot() {
+        val errorState = TvShowUiModel(
+            isLoading = false,
+            shows = emptyList(),
+            errorState = TvShowErrorState.ServerDown
+        )
+
+        composeTestRule.setContent {
+            TvShowUiState(
+                uiState = errorState,
+                onSelectGenre = {},
+                onToggleLike = {},
+                onRetry = {}
+            )
+        }
+
+        // Capture and compare the screenshot
+        compareScreenshot(composeTestRule)
+    }
+
+    @Test
+    fun tvShowScreen_emptyShowsErrorState_matchesScreenshot() {
+        val errorState = TvShowUiModel(
+            isLoading = false,
+            shows = emptyList(),
+            errorState = TvShowErrorState.EmptyShows
+        )
+
+        composeTestRule.setContent {
+            TvShowUiState(
+                uiState = errorState,
+                onSelectGenre = {},
+                onToggleLike = {},
+                onRetry = {}
+            )
+        }
+
+        // Capture and compare the screenshot
+        compareScreenshot(composeTestRule)
+    }
+
+    @Test
+    fun tvShowScreen_noValidShowsErrorState_matchesScreenshot() {
+        val errorState = TvShowUiModel(
+            isLoading = false,
+            shows = emptyList(),
+            errorState = TvShowErrorState.NoValidShows
+        )
+
+        composeTestRule.setContent {
+            TvShowUiState(
+                uiState = errorState,
+                onSelectGenre = {},
+                onToggleLike = {},
+                onRetry = {}
+            )
+        }
+
+        // Capture and compare the screenshot
+        compareScreenshot(composeTestRule)
+    }
+
+    @Test
+    fun tvShowScreen_unknownErrorState_matchesScreenshot() {
+        val errorState = TvShowUiModel(
+            isLoading = false,
+            shows = emptyList(),
+            errorState = TvShowErrorState.Unknown
         )
 
         composeTestRule.setContent {

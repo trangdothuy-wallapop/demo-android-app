@@ -1,11 +1,13 @@
 // Main business logic: Filter 20 valid items from the list of tv shows
 package com.example.myapplication.tvshow.domain
 
+import io.ktor.client.plugins.ResponseException
 import java.io.IOException
 // Domain-specific errors representing failures in business logic or data fetching.
 
 sealed class TvShowError(override val message: String) : Exception(message) {
     object NoInternetError : TvShowError("Unable to connect to the server. Please check your internet connection.")
+    object ServerDownError : TvShowError("Our servers are currently down. Please try again later.")
     object EmptyShowsError : TvShowError("No TV shows were returned from the server.")
     object NoValidShowsError : TvShowError("None of the returned TV shows had valid ratings or complete information.")
     data class UnknownError(val throwable: Throwable) : TvShowError(throwable.localizedMessage ?: "An unexpected error occurred.")
@@ -64,6 +66,7 @@ class TvShowUseCase(
             // Map network/system exceptions to Domain errors
             val domainError = when (exception) {
                 is IOException -> TvShowError.NoInternetError
+                is ResponseException -> TvShowError.ServerDownError // HTTP 4xx/5xx errors
                 is TvShowError -> exception // Already a domain error
                 else -> TvShowError.UnknownError(exception)
             }

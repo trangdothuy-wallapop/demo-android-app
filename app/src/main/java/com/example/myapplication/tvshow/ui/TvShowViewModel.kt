@@ -5,6 +5,7 @@ package com.example.myapplication.tvshow.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.tvshow.data.TvShowRepositoryImplementation
+import com.example.myapplication.tvshow.domain.TvShowError
 import com.example.myapplication.tvshow.domain.TvShowUseCase
 import com.example.myapplication.tvshow.domain.TvShowResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,7 @@ class TvShowViewModel(
     // Loads TV Shows using TvShowUseCase and updates UiState accordingly
     fun loadShows() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            _uiState.update { it.copy(isLoading = true, errorState = null) }
 
             val result = useCase()
 
@@ -45,7 +46,7 @@ class TvShowViewModel(
                             isLoading = false,
                             shows = data.shows,
                             genres = data.genres,
-                            errorMessage = null
+                            errorState = null
                         )
                     }
                 },
@@ -54,7 +55,13 @@ class TvShowViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = error.localizedMessage ?: "Failed to load TV shows. Please check your internet connection."
+                            errorState = when (error) {
+                                is TvShowError.NoInternetError -> TvShowErrorState.NoInternet
+                                is TvShowError.ServerDownError -> TvShowErrorState.ServerDown
+                                is TvShowError.EmptyShowsError -> TvShowErrorState.EmptyShows
+                                is TvShowError.NoValidShowsError -> TvShowErrorState.NoValidShows
+                                else -> TvShowErrorState.Unknown
+                            }
                         )
                     }
                 }

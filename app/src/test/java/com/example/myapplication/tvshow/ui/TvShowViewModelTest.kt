@@ -80,7 +80,7 @@ class TvShowViewModelTest {
         // Check that the state is updated with the fetched shows
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
-        assertTrue(state.errorMessage == null)
+        assertTrue(state.errorState == null)
         assertEquals(2, state.shows.size)
         assertEquals(sampleShows, state.shows)
         assertEquals(listOf("All", "Comedy"), state.genres)
@@ -89,16 +89,72 @@ class TvShowViewModelTest {
     @Test
     fun loadShows_failureFetch_updatesStateWithError() = runTest {
         // Prepare a failure result
+        fakeUseCase.resultToReturn = Result.failure(TvShowError.EmptyShowsError)
+        viewModel.loadShows()
+
+        advanceUntilIdle()
+
+        // Check that the state is updated with the error state
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertTrue(state.errorState is TvShowErrorState.EmptyShows)
+    }
+
+    @Test
+    fun loadShows_noValidShowsError_updatesStateWithNoValidShowsError() = runTest {
+        // Prepare a failure result for NoValidShowsError
+        fakeUseCase.resultToReturn = Result.failure(TvShowError.NoValidShowsError)
+        viewModel.loadShows()
+
+        advanceUntilIdle()
+
+        // Check that the state is updated with the NoValidShows error state
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertTrue(state.errorState is TvShowErrorState.NoValidShows)
+    }
+
+    @Test
+    fun loadShows_noInternetError_updatesStateWithNoInternetError() = runTest {
+        // Prepare a failure result for NoInternetError
         fakeUseCase.resultToReturn = Result.failure(TvShowError.NoInternetError)
         viewModel.loadShows()
 
         advanceUntilIdle()
 
-        // Check that the state is updated with the error message
+        // Check that the state is updated with the NoInternet error state
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
-        assertTrue(state.errorMessage != null)
-        assertEquals("Unable to connect to the server. Please check your internet connection.", state.errorMessage)
+        assertTrue(state.errorState is TvShowErrorState.NoInternet)
+    }
+
+    @Test
+    fun loadShows_serverDownError_updatesStateWithServerDownError() = runTest {
+        // Prepare a failure result for ServerDownError
+        fakeUseCase.resultToReturn = Result.failure(TvShowError.ServerDownError)
+        viewModel.loadShows()
+
+        advanceUntilIdle()
+
+        // Check that the state is updated with the ServerDown error state
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertTrue(state.errorState is TvShowErrorState.ServerDown)
+    }
+
+    @Test
+    fun loadShows_unknownError_updatesStateWithUnknownError() = runTest {
+        // Prepare a failure result for UnknownError
+        val unknownException = Exception("Unexpected error")
+        fakeUseCase.resultToReturn = Result.failure(TvShowError.UnknownError(unknownException))
+        viewModel.loadShows()
+
+        advanceUntilIdle()
+
+        // Check that the state is updated with the Unknown error state
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertTrue(state.errorState is TvShowErrorState.Unknown)
     }
 
     @Test
