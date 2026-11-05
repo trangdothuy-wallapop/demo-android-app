@@ -63,15 +63,7 @@ class TvShowUseCase(
                 )
             )
         }, onFailure = { exception ->
-            // Map network/system exceptions to Domain errors
-            val domainError = when (exception) {
-                is IOException -> TvShowError.NoInternetError
-                is ResponseException -> TvShowError.ServerDownError // HTTP 4xx/5xx errors
-                is TvShowError -> exception // Already a domain error
-                else -> TvShowError.UnknownError(exception)
-            }
-            Result.failure(domainError)
-            }
+            Result.failure(exception) }
         )
     }
 }

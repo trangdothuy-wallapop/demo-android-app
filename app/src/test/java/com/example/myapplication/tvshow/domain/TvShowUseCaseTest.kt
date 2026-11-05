@@ -39,7 +39,7 @@ class TvShowUseCaseTest {
     @Test
     fun rule1_ioException_returnsNoInternetError() = runBlocking {
         val fakeRepository = FakeTvShowRepository(
-            resultToReturn = Result.failure(IOException("No internet"))
+            resultToReturn = Result.failure(TvShowError.NoInternetError)
         )
         val useCase = TvShowUseCase(fakeRepository)
 
